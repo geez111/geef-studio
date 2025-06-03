@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeeF Studio | Desain Arsitektur & Interior</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Variabel Warna & Desain Dasar --- */
+        :root {
+            --bg-dark: #121212;
+            --surface-dark: #1E1E1E;
+            --text-dark: #EAEAEA;
+            --text-secondary-dark: #A0A0A0;
+            --border-dark: #2D2D2D;
+
+            --bg-light: #F4F6F8;
+            --surface-light: #FFFFFF;
+            --text-light: #1A1A1A;
+            --text-secondary-light: #555555;
+            --border-light: #E0E0E0;
+
+            --primary-accent: #007BFF;
+            --primary-accent-hover: #0056b3;
+            
+            /* Default to Dark Mode */
+            --bg-color: var(--bg-dark);
+            --surface-color: var(--surface-dark);
+            --text-primary: var(--text-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --border-color: var(--border-dark);
+        }
+        
+        /* --- Pengaturan untuk Light Mode --- */
+        body.light-mode {
+            --bg-color: var(--bg-light);
+            --surface-color: var(--surface-light);
+            --text-primary: var(--text-light);
+            --text-secondary: var(--text-secondary-light);
+            --border-color: var(--border-light);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* --- Pengaturan Bahasa --- */
+        .lang-en, .lang-id { display: none; }
+        body.lang-id-active .lang-id { display: inline; }
+        body.lang-en-active .lang-en { display: inline; }
+        h1 .lang-id, h1 .lang-en, h2 .lang-id, h2 .lang-en, h3 .lang-id, h3 .lang-en { display: none; }
+        body.lang-id-active h1 .lang-id, body.lang-id-active h2 .lang-id, body.lang-id-active h3 .lang-id { display: block; }
+        body.lang-en-active h1 .lang-en, body.lang-en-active h2 .lang-en, body.lang-en-active h3 .lang-en { display: block; }
+
+        /* --- Header & Navigasi --- */
+        .header {
+            position: sticky; top: 0; width: 100%; padding: 15px 5%;
+            background: color-mix(in srgb, var(--surface-color) 80%, transparent);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color); display: flex;
+            justify-content: space-between; align-items: center; z-index: 1000; box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
+        .logo { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--text-primary); text-decoration: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; margin-left: 25px; font-weight: 500; transition: color 0.3s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+        .nav-controls { display: flex; align-items: center; gap: 15px; }
+        .switch-btn { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); cursor: pointer; padding: 8px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; }
+        .switch-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+        .switch-btn svg { width: 20px; height: 20px; }
+        #lang-switch { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; padding: 8px 12px; border-radius: 20px; width: auto; }
+        .icon-moon, .icon-sun { display: none; }
+        body.light-mode .icon-moon { display: block; }
+        body:not(.light-mode) .icon-sun { display: block; }
+
+        /* --- Konten Utama & Section --- */
+        main { padding: 0 5%; max-width: 1100px; margin: 0 auto; }
+        section { padding: 100px 0; border-bottom: 1px solid var(--border-color); }
+        section:last-child { border-bottom: none; }
+        .section-title { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 700; margin-bottom: 15px; }
+        .section-subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 40px; }
+
+        /* --- Hero Section --- */
+        .hero { text-align: center; border: none; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 10vw, 5.5rem); line-height: 1.1; margin-bottom: 20px; color: var(--primary-accent); }
+        .hero p { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+
+        /* --- Tentang Kami --- */
+        #about p { margin-bottom: 1.5rem; line-height: 1.8; }
+
+        /* --- Layanan & Proses --- */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .grid-item { background: var(--surface-color); padding: 30px; border: 1px solid var(--border-color); border-radius: 12px; transition: all 0.3s ease; }
+        .grid-item:hover { transform: translateY(-5px); border-color: var(--primary-accent); }
+        .grid-item h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; margin-top: 0; color: var(--primary-accent); }
+
+        /* --- Portofolio --- */
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .project-card { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: transform 0.3s ease; }
+        .project-card:hover { transform: translateY(-8px); }
+        .project-card img { width: 100%; height: 250px; object-fit: cover; display: block; }
+        .project-info { padding: 25px; }
+        .project-info h3 { font-family: 'Syne', sans-serif; font-size: 1.6rem; margin: 0 0 10px 0; }
+        .project-info p { color: var(--text-secondary); margin: 0; font-size: 0.95rem; }
+
+        /* --- Kontak & Footer --- */
+        .contact-section { text-align: center; background: var(--surface-color); padding: 60px 20px; border-radius: 12px; }
+        .contact-links a { color: var(--primary-accent); text-decoration: none; font-size: 1.1rem; margin: 0 15px; font-weight: 500; transition: color 0.3s ease; }
+        .contact-links a:hover { color: var(--primary-accent-hover); }
+        footer { text-align: center; padding: 40px 20px; color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .section-title { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+
+<body class="dark-mode lang-id-active">
+
+    <header class="header">
+        <a href="#" class="logo">GeeF Studio</a>
+        <div class="nav-links">
+            <a href="#about"><span class="lang-id">Tentang</span><span class="lang-en">About</span></a>
+            <a href="#services"><span class="lang-id">Layanan</span><span class="lang-en">Services</span></a>
+            <a href="#process"><span class="lang-id">Proses</span><span class="lang-en">Process</span></a>
+            <a href="#portfolio"><span class="lang-id">Portofolio</span><span class="lang-en">Portfolio</span></a>
+            <a href="#contact"><span class="lang-id">Kontak</span><span class="lang-en">Contact</span></a>
+        </div>
+        <div class="nav-controls">
+            <button id="theme-switch" class="switch-btn" aria-label="Toggle theme">
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.106a.75.75 0 010 1.06l-1.591 1.59a.75.75 0 11-1.06-1.06l1.59-1.59a.75.75 0 011.06 0zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 011.06 0l1.59 1.59a.75.75 0 11-1.06 1.06l-1.59-1.59a.75.75 0 010-1.06zM12 21.75a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0v2.25a.75.75 0 01-.75.75zM5.106 17.834a.75.75 0 010-1.06l1.59-1.591a.75.75 0 111.06 1.06l-1.59 1.59a.75.75 0 01-1.06 0zM3 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3.75A.75.75 0 013 12zM6.166 5.106a.75.75 0 011.06 0l1.59 1.59a.75.75 0 01-1.06 1.06l-1.59-1.59a.75.75 0 010-1.06z"/></svg>
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.51 1.713-6.622 4.381-8.528a.75.75 0 01.818.162z" clip-rule="evenodd" /></svg>
+            </button>
+            <button id="lang-switch" class="switch-btn">EN</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>
+                    <span class="lang-id">Desain Berkelas, Ruang Berkarakter.</span>
+                    <span class="lang-en">Classy Design, Spaces with Character.</span>
+                </h1>
+                <p>
+                    <span class="lang-id">"Kami menciptakan ruang-ruang istimewa yang merefleksikan gaya unik Anda."</span>
+                    <span class="lang-en">"We create exceptional spaces that reflect your unique style."</span>
+                </p>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2 class="section-title">
+                <span class="lang-id">Di Balik Desain</span>
+                <span class="lang-en">Behind the Design</span>
+            </h2>
+            <p>
+                <span class="lang-id">GeeF Studio lahir dari keyakinan bahwa sebuah ruang seharusnya menjadi cerminan otentik dari jiwa penghuninya. Kami bukan hanya sekumpulan desainer; kami adalah para pencerita yang menggunakan bahasa bentuk, cahaya, dan material untuk mengisahkan visi unik Anda.</span>
+                <span class="lang-en">GeeF Studio was born from the belief that a space should be an authentic reflection of its inhabitant's soul. We are not just a group of designers; we are storytellers who use the language of form, light, and material to narrate your unique vision.</span>
+            </p>
+            <p>
+                <span class="lang-id">Bagi kami, setiap proyek adalah sebuah kolaborasi yang intim. Kami percaya proses terbaik dimulai dari mendengarkan. Kami mendedikasikan waktu untuk memahami impian, kebiasaan, dan aspirasi Anda, lalu menerjemahkannya ke dalam desain yang tidak hanya indah secara estetis, tapi juga fungsional dan bermakna bagi kehidupan Anda. Kami adalah partner kreatif Anda dalam setiap langkah perjalanan untuk menciptakan ruang yang benar-benar bisa Anda sebut 'rumah'.</span>
+                <span class="lang-en">For us, every project is an intimate collaboration. We believe the best process begins with listening. We dedicate time to understanding your dreams, habits, and aspirations, then translate them into a design that is not only aesthetically beautiful but also functional and meaningful to your life. We are your creative partner in every step of the journey to create a space you can truly call 'home'.</span>
+            </p>
+        </section>
+
+        <section id="services">
+            <h2 class="section-title">
+                <span class="lang-id">Layanan Kami</span>
+                <span class="lang-en">Our Services</span>
+            </h2>
+            <p class="section-subtitle">
+                <span class="lang-id">Rangkaian layanan komprehensif untuk menjawab setiap kebutuhan desain Anda.</span>
+                <span class="lang-en">A comprehensive range of services to meet your every design need.</span>
+            </p>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h3>
+                        <span class="lang-id">Desain Arsitektur</span>
+                        <span class="lang-en">Architectural Design</span>
+                    </h3>
+                    <p>
+                        <span class="lang-id">Merancang bangunan fungsional dan memukau dari denah hingga fasad.</span>
+                        <span class="lang-en">Designing functional and stunning buildings from floor plans to facades.</span>
+                    </p>
+                </div>
+                <div class="grid-item">
+                    <h3>
+                        <span class="lang-id">Desain Interior</span>
+                        <span class="lang-en">Interior Design</span>
+                    </h3>
+                    <p>
+                        <span class="lang-id">Menghidupkan setiap sudut ruangan dengan harmoni warna, furnitur, dan cahaya.</span>
+                        <span class="lang-en">Bringing every corner to life with a harmony of color, furniture, and light.</span>
+                    </p>
+                </div>
+                <div class="grid-item">
+                    <h3>
+                        <span class="lang-id">Visualisasi 3D</span>
+                        <span class="lang-en">3D Visualization</span>
+                    </h3>
+                    <p>
+                        <span class="lang-id">Mengubah ide menjadi gambar realistis agar Anda bisa melihat hasil akhir sebelum dibangun.</span>
+                        <span class="lang-en">Turning ideas into realistic images so you can see the final result before it's built.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="process">
+            <h2 class="section-title">
+                <span class="lang-id">Proses Kerja</span>
+                <span class="lang-en">Our Process</span>
+            </h2>
+            <p class="section-subtitle">
+                <span class="lang-id">Transparansi adalah kunci. Ini adalah tahapan terstruktur yang akan kita lalui bersama.</span>
+                <span class="lang-en">Transparency is key. These are the structured stages we will go through together.</span>
+            </p>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h3>
+                        <span class="lang-id">1. Konsultasi & Visi</span>
+                        <span class="lang-en">1. Consultation & Vision</span>
+                    </h3>
+                    <p>
+                        <span class="lang-id">Semua dimulai dari percakapan untuk memahami impian dan kebutuhan Anda.</span>
+                        <span class="lang-en">It all starts with a conversation to understand your dreams and needs.</span>
+                    </p>
+                </div>
+                <div class="grid-item">
+                    <h3>
+                        <span class="lang-id">2. Pengembangan Konsep</span>
+                        <span class="lang-en">2. Concept Development</span>
+                    </h3>
+                    <p>
+                        <span class="lang-id">Visi Anda kami tuangkan ke dalam mood board dan denah awal.</span>
+                        <span class="lang-en">We translate your vision into mood boards and initial floor plans.</span>
+                    </p>
+                </div>
+                <div class="grid-item">
+                    <h3>
+                        <span class="lang-id">3. Desain & Visualisasi</span>
+                        <span class="lang-en">3. Design & Visualization</span>
+                    </h3>
+                    <p>
+                        <span class="lang-id">Melihat konsep menjadi nyata lewat gambar 3D realistis untuk direvisi.</span>
+                        <span class="lang-en">Seeing concepts come to life through realistic 3D images for revision.</span>
+                    </p>
+                </div>
+                <div class="grid-item">
+                    <h3>
+                        <span class="lang-id">4. Detail & Eksekusi</span>
+                        <span class="lang-en">4. Detailing & Execution</span>
+                    </h3>
+                    <p>
+                        <span class="lang-id">Menyiapkan gambar teknis presisi untuk proses konstruksi yang lancar.</span>
+                        <span class="lang-en">Preparing precise technical drawings for a smooth construction process.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="portfolio">
+            <h2 class="section-title">
+                <span class="lang-id">Portofolio Pilihan</span>
+                <span class="lang-en">Featured Portfolio</span>
+            </h2>
+            <div class="portfolio-grid">
+
+                <div class="project-card">
+                    <img src="images/proyek-minimalis.jpg" alt="Rumah Minimalis">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Vila Putih Minimalis</span><span class="lang-en">Minimalist White Villa</span></h3>
+                        <p><span class="lang-id">Ketenangan dalam kesederhanaan.</span><span class="lang-en">Tranquility in simplicity.</span></p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/proyek-tropis.jpg" alt="Rumah Tropis">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Hunian Tropis Modern</span><span class="lang-en">Modern Tropical House</span></h3>
+                        <p><span class="lang-id">Menyatu dengan alam sekitar.</span><span class="lang-en">Integrated with the natural surroundings.</span></p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/interior-japandi.jpg" alt="Interior Japandi">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Interior Gaya Japandi</span><span class="lang-en">Japandi Style Interior</span></h3>
+                        <p><span class="lang-id">Harmoni antara estetika Jepang & Skandinavia.</span><span class="lang-en">Harmony of Japanese & Scandinavian aesthetics.</span></p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/proyek-industrial.jpg" alt="Rumah Industrial">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Rumah Urban Industrial</span><span class="lang-en">Urban Industrial Home</span></h3>
+                        <p><span class="lang-id">Karakter material mentah yang terekspos.</span><span class="lang-en">The character of exposed raw materials.</span></p>
+                    </div>
+                </div>
+                 <div class="project-card">
+                    <img src="images/interior-mewah.jpg" alt="Interior Mewah">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Ruang Tamu Mewah Klasik</span><span class="lang-en">Luxury Classic Living Room</span></h3>
+                        <p><span class="lang-id">Keanggunan detail marmer dan aksen emas.</span><span class="lang-en">The elegance of marble details and gold accents.</span></p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/proyek-kontemporer.jpg" alt="Rumah Kontemporer">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Fasad Kontemporer Dinamis</span><span class="lang-en">Dynamic Contemporary Facade</span></h3>
+                        <p><span class="lang-id">Permainan bentuk geometris yang berani.</span><span class="lang-en">A bold play of geometric shapes.</span></p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/interior-bohemian.jpg" alt="Interior Bohemian">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Kamar Tidur Bohemian</span><span class="lang-en">Bohemian Bedroom</span></h3>
+                        <p><Kenyamanan dari perpaduan tekstur dan warna.</span><span class="lang-en">Comfort from a mix of textures and colors.</span></p>
+                    </div>
+                </div>
+                 <div class="project-card">
+                    <img src="images/proyek-scandinavian.jpg" alt="Rumah Scandinavian">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Rumah Terang Skandinavia</span><span class="lang-en">Bright Scandinavian Home</span></h3>
+                        <p><span class="lang-id">Fungsionalitas bertemu dengan estetika cerah.</span><span class="lang-en">Functionality meets a bright aesthetic.</span></p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/interior-dapur-modern.jpg" alt="Interior Dapur Modern">
+                    <div class="project-info">
+                        <h3><span class="lang-id">Dapur Modern & Bersih</span><span class="lang-en">Modern & Clean Kitchen</span></h3>
+                        <p><span class="lang-id">Efisiensi dan keindahan dalam satu ruang.</span><span class="lang-en">Efficiency and beauty in one space.</span></p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="contact-section">
+                <h2 class="section-title" style="margin-bottom: 20px;">
+                    <span class="lang-id">Wujudkan Ruang Impian Anda</span>
+                    <span class="lang-en">Realize Your Dream Space</span>
+                </h2>
+                <p class="section-subtitle" style="margin: 0 auto 30px;">
+                    <span class="lang-id">Mari berkolaborasi. Hubungi kami untuk memulai proyek desain Anda.</span>
+                    <span class="lang-en">Let's collaborate. Contact us to start your design project.</span>
+                </p>
+                <div class="contact-links">
+                    <a href="https://instagram.com/geef.studio" target="_blank">Instagram</a>
+                    <a href="https://wa.me/6285156245327" target="_blank">WhatsApp</a>
+                    <a href="mailto:geef19studio@gmail.com">Email</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 GeeF Studio. 
+            <span class="lang-id">Didesain dengan penuh semangat.</span>
+            <span class="lang-en">Designed with passion.</span>
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- FUNGSI THEME SWITCH (LIGHT/DARK MODE) ---
+            const themeSwitch = document.getElementById('theme-switch');
+            const body = document.body;
+
+            // Cek tema dari localStorage saat halaman dimuat
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                body.classList.add('light-mode');
+            } else {
+                body.classList.remove('light-mode');
+            }
+
+            themeSwitch.addEventListener('click', () => {
+                body.classList.toggle('light-mode');
+                // Simpan pilihan tema ke localStorage
+                if (body.classList.contains('light-mode')) {
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            // --- FUNGSI LANGUAGE SWITCH (ID/EN) ---
+            const langSwitch = document.getElementById('lang-switch');
+
+            // Cek bahasa dari localStorage saat halaman dimuat
+            const savedLang = localStorage.getItem('lang');
+            if (savedLang === 'en') {
+                body.classList.remove('lang-id-active');
+                body.classList.add('lang-en-active');
+                langSwitch.textContent = 'ID';
+            } else {
+                body.classList.remove('lang-en-active');
+                body.classList.add('lang-id-active');
+                langSwitch.textContent = 'EN';
+            }
+
+            langSwitch.addEventListener('click', () => {
+                if (body.classList.contains('lang-id-active')) {
+                    body.classList.remove('lang-id-active');
+                    body.classList.add('lang-en-active');
+                    langSwitch.textContent = 'ID';
+                    localStorage.setItem('lang', 'en');
+                } else {
+                    body.classList.remove('lang-en-active');
+                    body.classList.add('lang-id-active');
+                    langSwitch.textContent = 'EN';
+                    localStorage.setItem('lang', 'id');
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
